@@ -63,8 +63,12 @@ RUN gem install -N \
 # patch for Unity 2020.x
 COPY docker-assets/installation.fixed.rb /usr/local/bundle/gems/u3d-1.2.3/lib/u3d/installation.rb
 
-RUN u3d available -o linux --force --no-central
-RUN USER=root u3d install 2020.1.4f1 -p unity,mac-mono && rm -rf /root/Downloads
+RUN USER=root u3d available --operating_system linux --force --no-central
+
+ARG UNITY_VERSION=2020.1.4f1
+ARG UNITY_MODULES=mac-mono
+
+RUN USER=root u3d install --trace ${UNITY_VERSION} --packages unity,${UNITY_MODULES} && rm -rf /root/Downloads
 
 RUN locale-gen en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
